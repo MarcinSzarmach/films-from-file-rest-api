@@ -2,7 +2,7 @@
 
 To run app You need Node.js.
 
-To run localy you nedd to add file .env (in root project) with:
+To run localy you need to add file .env (in root project) with:
 
 ```
 PORT=8000
@@ -20,11 +20,19 @@ $ npm start
 ### GET /moviesByParams?genres=<genres>&runtime=<runtime>
 
 Returns collections of movies by query
+
 Query:
+
+```bash
 genres(optional) => Fantasy,Comedy
 runtime(optional) => 100
+```
 
-example: /moviesByParams?genres=Fantasy,Comedy&runtime=100
+Example:
+
+```bash
+/moviesByParams?genres=Fantasy,Comedy&runtime=100
+```
 
 ### GET /movies
 
