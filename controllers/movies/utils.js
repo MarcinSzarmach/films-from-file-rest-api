@@ -1,7 +1,7 @@
-const fs = require('fs');
 const validator = require("../../helpers/validate");
+const _ = require('lodash');
+const modelFilms = require('../../models/movies');
 require('lodash.combinations');
-let _ = require('lodash');
 
 const runtimeRange = 10;
 
@@ -23,7 +23,7 @@ const movieRequirements = {
 
 module.exports = {
   getGenresCombinations: function (genres) {
-    return _.flatMap(genres, (v, i, a) => _.combinations(a, i + 1));
+    return _.flatMap(genres, (value, index, array) => _.combinations(array, index + 1));
   },
   getFilteredMoviesSpecialAlrgorithm: function (movies, genres, runtime) {
     const isGenres = genres.length > 0;
@@ -52,71 +52,9 @@ module.exports = {
     return _.inRange(parseInt(movie.runtime), runtime - runtimeRange, runtime + runtimeRange)
   },
   filterByGenres: (movie, genres) => {
-    return _.find(genres, genre => {
-      return _.isEqual(_.intersection(genre, movie.genres), genre)
-    })
-  },
-  getAllMovies: () => {
-    return new Promise((resolve, reject) => {
-      fs.readFile(process.env.FILE_FULL_PATH, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          let movies = []
-          try {
-            movies = JSON.parse(data).movies
-          } catch (error) {
-            reject(error);
-          }
-          resolve(movies)
-        }
-      });
-    })
-  },
-  getAllGenres: () => {
-    return new Promise((resolve, reject) => {
-      fs.readFile(process.env.FILE_FULL_PATH, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(JSON.parse(data).genres)
-        }
-      });
-    })
-  },
-  setAllMovies: (movies) => {
-    return new Promise((resolve, reject) => {
-      fs.readFile(process.env.FILE_FULL_PATH, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          let fileContent = JSON.parse(data)
-          fileContent.movies = movies;
-          fs.writeFile(process.env.FILE_FULL_PATH, JSON.stringify(fileContent, null, 4), (err, data) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(fileContent.movies)
-            }
-          });
-        }
-      });
-    })
-  },
-  getIdMovie: movies => {
-    const arr = [...movies].sort((a, b) => {
-      return b.id - a.id
-    })
-    return arr[0].id + 1
-  },
-  addMovie: async function (movie) {
-    let movies = await this.getAllMovies();
-    const id = movies.slice(-1)[0] ? this.getIdMovie(movies) : 1;
-    movies.push({
-      id,
-      ...movie
-    })
-    return this.setAllMovies(movies);
+    return _.find(genres, genre =>
+      _.isEqual(_.intersection(genre, movie.genres), genre)
+    )
   },
   validateFilterMovie(filter) {
     return new Promise((resolve, reject) => {

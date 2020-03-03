@@ -1,9 +1,10 @@
-const helpers = require("./helpers");
+const utils = require("./utils");
+const modelFilms = require("../../models/movies/index");
 let _ = require('lodash');
 
 module.exports = {
   getAll: async (req, res) => {
-    helpers.getAllMovies().then(data => {
+    modelFilms.getAllMovies().then(data => {
       res.json(data);
     }).catch(err => {
       res.status(500)
@@ -15,7 +16,7 @@ module.exports = {
     })
   },
   getFilteredAll: async (req, res) => {
-    helpers.validateFilterMovie({
+    utils.validateFilterMovie({
       genres: req.query.genres ? req.query.genres.split(',') : [],
       runtime: req.query.runtime
     }).then(() => {
@@ -23,9 +24,9 @@ module.exports = {
         genres: req.query.genres ? req.query.genres.split(',') : [],
         runtime: req.query.runtime ? parseInt(req.query.runtime) : false
       }
-      helpers.getAllMovies().then(data => {
-        const genres = helpers.getGenresCombinations(params.genres);
-        res.json(helpers.getFilteredMoviesSpecialAlrgorithm(data, genres, params.runtime));
+      modelFilms.getAllMovies().then(data => {
+        const genres = utils.getGenresCombinations(params.genres);
+        res.json(utils.getFilteredMoviesSpecialAlrgorithm(data, genres, params.runtime));
       }).catch(err => {
         res.status(500)
           .send({
@@ -44,8 +45,8 @@ module.exports = {
 
   },
   create: async (req, res) => {
-    helpers.validateMovie(req.body).then(() => {
-      helpers.addMovie(req.body).then(() => {
+    utils.validateMovie(req.body).then(() => {
+      modelFilms.addMovie(req.body).then(() => {
         res
           .send({
             success: true

@@ -2,8 +2,8 @@ const Validator = require('validatorjs');
 
 Validator.registerAsync('genres', function (genres, attribute, req, passes) {
   if (Array.isArray(genres)) {
-    const helpers = require('../controllers/movies/helpers');
-    helpers.getAllGenres().then(genresFromFile => {
+    const utils = require('../models/movies');
+    utils.getAllGenres().then(genresFromFile => {
       genres.forEach(genre => {
         if (!genresFromFile.includes(genre)) {
           passes(false, `Genre ${genre} is not in ${genresFromFile.join(',')}`);
