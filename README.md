@@ -17,7 +17,7 @@ $ npm start
 
 ## ENDPOINTS MOVIES
 
-### GET /moviesByParams?genres=<genres>&runtime=<runtime>
+### GET /moviesByParams?genres=${genres}&runtime=${runtime}
 
 Returns collections of movies by query
 
