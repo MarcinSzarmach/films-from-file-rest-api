@@ -1,6 +1,6 @@
 # Films REST API
 
-To run app You need MongoDB and Node.js.
+To run app You need Node.js.
 
 To run localy you nedd to add file .env (in root project) with:
 
