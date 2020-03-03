@@ -1,0 +1,31 @@
+{
+    "name": "rest-api-films",
+    "version": "1.0.0",
+    "description": "REST API for films",
+    "main": "index.js",
+    "scripts": {
+        "debug": "nodemon --inspect server.js",
+        "start": "node server.js",
+        "test": "jest"
+    },
+    "author": "Marcin Szarmach",
+    "license": "ISC",
+    "jest": {
+        "testEnvironment": "node",
+        "coveragePathIgnorePatterns": [
+            "/node_modules/"
+        ]
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "lodash": "^4.17.15",
+        "lodash.combinations": "^18.9.19",
+        "validatorjs": "^3.18.1"
+    },
+    "devDependencies": {
+        "dotenv": "^8.2.0",
+        "jest": "^25.1.0",
+        "nodemon": "^2.0.2",
+        "supertest": "^4.0.2"
+    }
+}
