@@ -61,6 +61,7 @@ module.exports = {
       id,
       ...movie
     })
-    return this.setAllMovies(movies);
+    this.setAllMovies(movies);
+    return movie
   },
 }
