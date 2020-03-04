@@ -1,26 +1,31 @@
 require("dotenv").config();
 
-const mongoose = require("mongoose");
 const request = require("supertest");
+const genres = ["Fantasy", "Comedy"]
+const runtime = 100;
+const {
+  runtimeRange
+} = require("../controllers/movies/utils");
+const _ = require('lodash');
 
-const id = "tt7286456";
-const value = "Test comment";
 const app = require("../server");
 const server = app.server;
 
 describe("Movies Endpoints", () => {
-    // describe("Post Endpoints", () => {
-    //     it("should be able to create a movie", async() => {
-    //         const { film } = await createFilm();
-    //         expect(film.status).toBe(200);
-    //     });
-    // });
-  
-    // describe("Get Endpoints", () => {
-    //     it("should be able to get a movie", async() => {
-    //         const { film } = await createFilm();
-    //         const getFilms = await request(server).get(`/movies`);
-    //         expect(getFilms.body).toContainEqual(film.body);
-    //     });
-    // });
+  describe("Get Endpoints", () => {
+    it("get films by runtime", async () => {
+      await request(server).get(`/moviesByParams?runtime=${runtime}`)
+      const req = await request(server).get(`/moviesByParams?runtime=${runtime}`).expect('Content-Type', /json/).expect(200)
+      const movie = req.body;
+      expect(_.inRange(parseInt(_.head(movie).runtime), runtime - runtimeRange, runtime + runtimeRange) && _.size(movie) === 1).toBeTruthy();
+    });
+
+    it("get films by runtime and genres", async () => {
+      const req = await request(server).get(`/moviesByParams?genres=${genres.join(',')}&runtime=${runtime}`)
+      const movies = req.body;
+      movies.filter(movie => {
+        expect(_.size(_.intersection(genres, movie.genres)) && _.inRange(parseInt(movie.runtime), runtime - runtimeRange, runtime + runtimeRange)).toBeTruthy();
+      });
+    });
   });
+});

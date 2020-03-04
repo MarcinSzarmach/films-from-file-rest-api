@@ -46,11 +46,9 @@ module.exports = {
   },
   create: async (req, res) => {
     utils.validateMovie(req.body).then(() => {
-      modelFilms.addMovie(req.body).then(() => {
+      modelFilms.addMovie(req.body).then((movie) => {
         res
-          .send({
-            success: true
-          });
+          .send(movie);
       }).catch((err) => {
         res.status(500)
           .send({

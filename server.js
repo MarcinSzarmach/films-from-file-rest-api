@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 const express = require("express");
-const filmsRouter = require("./routes/film");
+const moviesRouter = require("./routes/movies");
 const path = require('path');
 var port = process.env.PORT || 8080;
 
@@ -22,7 +22,7 @@ class App {
     }
 
     routes() {
-        this.server.use("/", filmsRouter);
+        this.server.use("/", moviesRouter);
     }
 }
 

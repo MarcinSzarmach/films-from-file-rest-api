@@ -22,8 +22,9 @@ const movieRequirements = {
 }
 
 module.exports = {
+  runtimeRange,
   getGenresCombinations: function (genres) {
-    return _.flatMap(genres, (value, index, array) => _.combinations(array, index + 1));
+    return _.reverse(_.flatMap(genres, (value, index, array) => _.combinations(array, index + 1)));
   },
   getFilteredMoviesSpecialAlrgorithm: function (movies, genres, runtime) {
     const isGenres = genres.length > 0;
@@ -31,19 +32,27 @@ module.exports = {
     if (!isRuntime && !isGenres) {
       return [_.sample(movies)]
     }
-    const filteredMovies = movies.filter(movie => {
-      if (isRuntime && isGenres) {
-        return this.filterByDurationAndGenres(movie, runtime, genres)
-      } else if (isGenres) {
-        return this.filterByGenres(movie, genres)
-      } else if (isRuntime) {
-        return this.filterByDuration(movie, runtime)
-      }
-    });
+    const filteredMovies = this.sortBy(
+      movies.filter(movie => {
+        if (isRuntime && isGenres) {
+          return this.filterByDurationAndGenres(movie, runtime, genres)
+        } else if (isGenres) {
+          return this.filterByGenres(movie, genres)
+        } else if (isRuntime) {
+          return this.filterByDuration(movie, runtime)
+        }
+      }), isGenres, genres)
     if (isRuntime && !isGenres) {
       return [_.sample(filteredMovies)]
     }
     return filteredMovies
+  },
+  sortBy: (movies, isGenres, genres) => {
+    if (isGenres) {
+      return _.orderBy(movies, [movie => _.sum(genres.map(genre => _.size(_.intersection(_.sortBy(movie.genres), _.sortBy(genre)))))], ['desc'])
+    } else {
+      return movies
+    }
   },
   filterByDurationAndGenres: function (movie, runtime, genres) {
     return this.filterByGenres(movie, genres) && this.filterByDuration(movie, runtime)
